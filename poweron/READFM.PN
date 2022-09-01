@@ -1,0 +1,82 @@
+[
+    Title                         : READFM.PN
+    Program Type                  : Specfile
+    Created On                    : 8/31/2022
+    Created By                    : Tom Barkley
+
+    SUMMARY:
+
+    Reads a data file in text format and spits it out to PowerOn batch output for Batch FM or Posting.
+
+]
+
+target = ACCOUNT
+
+define
+	oneHeader = number
+	delimiter = "|"
+	readListIndex = number
+	FNumber = number
+	FError = character
+	FCharacter = character
+	FLine = character
+	CR = character(1)
+	LF = character(1)
+	i = number
+	readList = character array(10000)
+	dataFileName = character
+	outputFileName = character
+end
+
+setup
+	CR = CtrlChr(13) [Carriage Return]
+	LF = CtrlChr(10) [Line Feed]
+	
+	
+	oneHeader = 0
+	
+	for readListIndex = 0 to 10000 do
+		readList(readListIndex) = ""
+	end
+	
+	readListIndex = 0
+	
+	dataFileName = characterread("Enter data file name")
+	outputFileName = characterread("Enter output file name")
+	
+	FileOpen("DATA",dataFileName,"READ",FNumber,FError)
+	if FError <> "" then do
+		print "Error opening Data File: " + FError
+		Newline
+		Terminate
+	end
+	
+	
+	while FError = "" do
+		
+		FileReadLine(FNumber,FLine,FError)
+		if FError <> "" and readListIndex = 0 then do
+			print "Error reading first line: " + FError
+			Newline
+			Terminate
+		end
+		
+		if Fline <> "" then do
+			readList(readListIndex) = FLine
+			readListIndex = readListIndex + 1
+		end
+	end
+	fileClose(FNumber,FError)
+end
+
+select
+	none
+end
+
+
+print title = outputFileName reportcategory = ""
+	for i = 0 to readListIndex do
+		print readList(i)
+		newline
+	end
+end
