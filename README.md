@@ -18,6 +18,8 @@ You will need to create a user defined table type, several functions, and a stor
 5. Create the `changeline` functions by running [changeline.sql](sql/changeline.sql)
 6. Create the stored procedure by running [procedure.sql](sql/procedure.sql)
 
+You will want to make sure to adjust the database and schema names as needed for your environment.
+
 #### PowerOn
 
 You will need to install the PowerOn in Symitar.  It is located in the `poweron` folder.
@@ -41,11 +43,13 @@ The order of operations is as follows:
 
 ### PowerOn
 
-You will need to import the output text file into the Letter Files folder in Symitar.  
+You will need to import the SQL generated text file into the Letter Files folder in Symitar.  
 
-You can then run the PowerOn through Batch Control to create the FM Journal.
+You can then run the PowerOn through `Run a Batch Program` in `Batch Control` to create the FM Journal.  The PowerOn takes the following parameters:
+- dataFileName - the name of the file you imported - the prompt is `Enter data file name`
+- outputFileName - the name of the file you want to output the FM Journal to - the prompt is `Enter output file name`
 
-You can then run the FM Journal through Batch Control to perform the actual FM.
+You can then run the FM Journal through the `Perform FM from PowerOn Output` in `Miscellaneous Processing`  to perform the actual FM.
 
 ## Troubleshooting & Recommendations
 
