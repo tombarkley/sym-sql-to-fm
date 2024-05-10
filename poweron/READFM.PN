@@ -10,73 +10,51 @@
 
 ]
 
-target = ACCOUNT
+TARGET = ACCOUNT
 
-define
-	oneHeader = number
-	delimiter = "|"
-	readListIndex = number
-	FNumber = number
-	FError = character
-	FCharacter = character
-	FLine = character
-	CR = character(1)
-	LF = character(1)
-	i = number
-	readList = character array(10000)
-	dataFileName = character
-	outputFileName = character
-end
+DEFINE
+	readListIndex = NUMBER
+	FNumber = NUMBER
+	FError = CHARACTER
+	FLine = CHARACTER
+	CR = CHARACTER(1)
+	LF = CHARACTER(1)
+	dataFileName = CHARACTER
+	outputFileName = CHARACTER
+	lineData = CHARACTER
+END
 
-setup
-	CR = CtrlChr(13) [Carriage Return]
-	LF = CtrlChr(10) [Line Feed]
-	
-	
-	oneHeader = 0
-	
-	for readListIndex = 0 to 10000 do
-		readList(readListIndex) = ""
-	end
-	
+SETUP
+	CR = CTRLCHR(13) [Carriage Return]
+	LF = CTRLCHR(10) [Line Feed]
 	readListIndex = 0
-	
-	dataFileName = characterread("Enter data file name")
-	outputFileName = characterread("Enter output file name")
-	
-	FileOpen("DATA",dataFileName,"READ",FNumber,FError)
-	if FError <> "" then do
-		print "Error opening Data File: " + FError
-		Newline
-		Terminate
-	end
-	
-	
-	while FError = "" do
-		
-		FileReadLine(FNumber,FLine,FError)
-		if FError <> "" and readListIndex = 0 then do
-			print "Error reading first line: " + FError
-			Newline
-			Terminate
-		end
-		
-		if Fline <> "" then do
-			readList(readListIndex) = FLine
-			readListIndex = readListIndex + 1
-		end
-	end
-	fileClose(FNumber,FError)
-end
+	dataFileName = CHARACTERREAD("Enter data file name")
+	outputFileName = CHARACTERREAD("Enter output file name")
+END
 
-select
-	none
-end
+SELECT
+	NONE
+END
 
 
-print title = outputFileName reportcategory = ""
-	for i = 0 to readListIndex do
-		print readList(i)
-		newline
-	end
-end
+PRINT TITLE = outputFileName REPORTCATEGORY = ""
+	FILEOPEN("DATA",dataFileName,"READ",FNumber,FError)
+	IF FError <> "" THEN DO
+		PRINT "Error opening Data File: "
+		PRINT FError
+		NEWLINE
+		TERMINATE
+	END
+	ELSE DO
+		WHILE FError = "" DO
+			FILEREADLINE(FNumber,FLine,FError)
+			IF FLine <> "" THEN DO
+				lineData = ""
+				lineData = FLine
+				PRINT lineData
+				NEWLINE
+			END
+		END
+		FILECLOSE(FNumber,FError)
+	END
+END
